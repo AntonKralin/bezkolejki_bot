@@ -1,5 +1,7 @@
 # bezkolejki_bot
 
+
+
 Чтобы запустить это приложение:
 + install python3, pip3, python3-venv
 + copy this project 
@@ -7,6 +9,8 @@
 + python3 -m venv venv
 + source venv/bin/activate (activate virtual enviroment)
 + pip3 install -r requirements.txt (install dependencies)
++ download driver https://googlechromelabs.github.io/chrome-for-testing/ for your OS
++ put driver in your app
 
 
 ***.env:***
