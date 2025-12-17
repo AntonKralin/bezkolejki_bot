@@ -1,19 +1,24 @@
+import time
+import smtplib
+from email.message import EmailMessage
+
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-import time
+from playsound3 import playsound
 
 
 main_url = 'https://uw.bezkolejki.eu/ouw'
+address = 'kralin.dart@gmail.com'
 
 
 def click_checkbox(driver):
     try:
         captcha_frame = driver.find_element(
-            By.XPATH, 
+            By.XPATH,
             "//iframe[contains(@src, 'hcaptcha.com')]"
         )
         driver.execute_script("arguments[0].click();", captcha_frame)
@@ -49,8 +54,10 @@ def select_first_time_from_dropdown(driver):
 
         select.select_by_index(start_index)
         selected_value = select.first_selected_option.text
+        playsound('AITheme0.mp3', block=False)
+        send_email(address=address, text='')
         print(f"Текущее выбранное значение: {selected_value}")
-        click_checkbox(driver)
+        # click_checkbox(driver)
 
     except Exception as e:
         print(f"❌ Ошибка при выборе времени: {e}")
@@ -140,17 +147,47 @@ def start_parsing():
 
         go_to_calendar(driver)
 
-        check_calendar(driver)
-        next_month = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "div.vc-arrow.is-right"))
-            )
-        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", next_month)
-        next_month.click()
-        check_calendar(driver)
+        while True:
+            check_calendar(driver)
+            next_month = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.vc-arrow.is-right"))
+                )
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", next_month)
+            next_month.click()
+            check_calendar(driver)
+            prev_month = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.vc-arrow.is-left"))
+                )
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", prev_month)
+            prev_month.click()
+            time.sleep(1)
 
     except Exception as ex:
         print(ex)
         driver.quit()
+
+
+def send_email(address, text):
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 465
+    sender_email = 'tktat6@gmail.com'
+    sender_password = 'kbzg wmpr swlp yuau'
+    subject = 'Visa'
+
+    msg = EmailMessage()
+    msg.set_content(text)
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = address
+
+    try:
+        with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+        print("Email sent successfully!")
+
+    except smtplib.SMTPException as e:
+        print(f"Error: unable to send email. {e}")
 
 
 if __name__ == '__main__':
