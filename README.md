@@ -9,7 +9,8 @@
 + python3 -m venv venv
 + source venv/bin/activate (activate virtual enviroment)
 + pip3 install -r requirements.txt (install dependencies)
-+ download driver https://googlechromelabs.github.io/chrome-for-testing/ for your OS
++ old download driver https://googlechromelabs.github.io/chrome-for-testing/ for your OS
++ this download https://geckodriver.com/download/
 + put driver in your app
 
 
