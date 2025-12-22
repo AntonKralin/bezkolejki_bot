@@ -160,7 +160,7 @@ def start_parsing():
                 )
             driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", prev_month)
             prev_month.click()
-            time.sleep(1)
+            time.sleep(60)
 
     except Exception as ex:
         print(ex)
